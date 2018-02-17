@@ -1,5 +1,18 @@
 const liriApp = {
 
+	// maintains record of node arguments in log.txt
+	logInputs: function(arg1, arg2) {
+
+		let query;
+		query = (arg2 ? arg2 : "no query");
+
+		const fs = require('fs');
+		fs.appendFile("log", (arg1 + ", " + query + "; "), function(error) {
+			if(error) throw error;
+		});
+
+	},
+
 	// gathers up to 20 tweets from test account
 	pullTweets: function(client) {
 
@@ -101,15 +114,16 @@ const liriApp = {
 
 	},
 
-	// initializes dotenv package configuration then passes through node arguments to the command processing function
+	// initializes dotenv package configuration then passes through node arguments to both the logging and command processing functions
 	init: function() {
 
 		require('dotenv').config();
 
-		this.processCmd(
-			process.argv[2], 
-			process.argv[3]
-		);
+		const arg1 = process.argv[2],
+					arg2 = process.argv[3]; 
+
+		this.logInputs(arg1, arg2);
+		this.processCmd(arg1, arg2);
 
 	}
 
